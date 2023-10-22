@@ -3,13 +3,41 @@ import chess
 import chess.svg
 import random
 
-def print_board(board):
-    print(board)
+# Define a dictionary to map piece notation to image filenames
+piece_image_filenames = {
+    'r': 'black_rook.png',
+    'n': 'black_knight.png',
+    'b': 'black_bishop.png',
+    'q': 'black_queen.png',
+    'k': 'black_king.png',
+    'p': 'black_pawn.png',
+    'R': 'white_rook.png',
+    'N': 'white_knight.png',
+    'B': 'white_bishop.png',
+    'Q': 'white_queen.png',
+    'K': 'white_king.png',
+    'P': 'white_pawn.png',
+}
 
-def draw_grid(screen):
-    for x in range(0, 400, 50):
-        pygame.draw.line(screen, (0, 0, 0), (x, 0), (x, 400))
-        pygame.draw.line(screen, (0, 0, 0), (0, x), (400, x))
+def load_piece_images():
+    piece_images = {}
+    for piece, filename in piece_image_filenames.items():
+        piece_images[piece] = pygame.image.load(f'chess_pieces/{filename}')
+    return piece_images
+
+def draw_chess_board(screen, piece_images, board):
+    # Draw the chessboard grid
+    for row in range(8):
+        for col in range(8):
+            color = (255, 255, 255) if (row + col) % 2 == 0 else (0, 0, 0)
+            pygame.draw.rect(screen, color, (col * 50, row * 50, 50, 50))
+
+    # Draw the chess pieces on the board
+    for square, piece in board.piece_map().items():
+        x = chess.square_file(square) * 50
+        y = (7 - chess.square_rank(square)) * 50
+        piece_image = piece_images[piece.symbol()]
+        screen.blit(piece_image, (x, y))
 
 def get_computer_move(board):
     legal_moves = list(board.legal_moves)
@@ -21,19 +49,15 @@ def play_chess():
     pygame.display.set_caption("Chess Game")
 
     board = chess.Board()
+    piece_images = load_piece_images()
+
     while not board.is_game_over():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
                 return
 
-        screen.fill((255, 255, 255))
-        draw_grid(screen)
-
-        for square, piece in board.piece_map().items():
-            x = chess.square_file(square) * 50
-            y = (7 - chess.square_rank(square)) * 50
-            pygame.draw.rect(screen, (0, 0, 0), (x, y, 50, 50))
-            # Draw chess pieces here
+        draw_chess_board(screen, piece_images, board)
 
         pygame.display.flip()
 
