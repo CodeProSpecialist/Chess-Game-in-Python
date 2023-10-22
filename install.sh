@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of required packages
-packages=("python-chess" "python-chess-variant")
+packages=("python-chess")
 
 # Function to install packages
 install_packages() {
