@@ -16,14 +16,24 @@ class ChessGame:
 
     def load_images(self):
         self.piece_images = {}
-        piece_names = [
-            'black_bishop', 'black_king', 'black_knight', 'black_pawn', 'black_queen', 'black_rook',
-            'white_bishop', 'white_king', 'white_knight', 'white_pawn', 'white_queen', 'white_rook'
-        ]
-        for piece in piece_names:
-            img = Image.open(f"chess_pieces/{piece}.png")
+        piece_mappings = {
+            'r': 'black_rook',
+            'n': 'black_knight',
+            'b': 'black_bishop',
+            'q': 'black_queen',
+            'k': 'black_king',
+            'p': 'black_pawn',
+            'R': 'white_rook',
+            'N': 'white_knight',
+            'B': 'white_bishop',
+            'Q': 'white_queen',
+            'K': 'white_king',
+            'P': 'white_pawn',
+        }
+        for piece_symbol, piece_name in piece_mappings.items():
+            img = Image.open(f"chess_pieces/{piece_name}.png")
             img = ImageTk.PhotoImage(img)
-            self.piece_images[piece] = img
+            self.piece_images[piece_symbol] = img
 
     def draw_board(self):
         for row in range(8):
