@@ -32,7 +32,7 @@ class ChessGame:
         }
         for piece_symbol, piece_name in piece_mappings.items():
             img = Image.open(f"chess_pieces/{piece_name}.png")
-            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7)))
+            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7))))
             self.piece_images[piece_symbol] = img
 
     def draw_board(self):
