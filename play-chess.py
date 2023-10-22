@@ -2,7 +2,6 @@ import tkinter as tk
 import chess
 import chess.svg
 from PIL import Image, ImageTk
-from tkinter import simpledialog, messagebox
 
 class ChessGame:
     def __init__(self, root):
@@ -47,13 +46,9 @@ class ChessGame:
                     img = self.piece_images[piece.symbol()]
                     self.canvas.create_image(col * 50 + 25, row * 50 + 25, image=img)
 
-    def promote_pawn(self):
-        options = ["Queen", "Rook", "Knight", "Bishop"]
-        response = simpledialog.askstring("Promotion", "Choose a promotion (Queen, Rook, Knight, Bishop):", parent=self.root)
-        if response in options:
-            piece_mapping = {"Queen": "q", "Rook": "r", "Knight": "n", "Bishop": "b"}
-            promotion_piece = chess.Piece.from_symbol(piece_mapping[response])
-            self.board.set_piece_at(self.promotion_square, promotion_piece)
+    def promote_pawn(self, square):
+        promotion_piece = chess.Piece(chess.QUEEN, self.board.turn)
+        self.board.set_piece_at(square, promotion_piece)
 
     def on_square_click(self, event):
         col = event.x // 50
@@ -68,9 +63,8 @@ class ChessGame:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
                 if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
-                    # Pawn promotion logic
-                    self.promotion_square = square
-                    self.promote_pawn()
+                    # Automatically promote the pawn to Queen
+                    self.promote_pawn(square)
                 else:
                     self.board.push(move)
 
