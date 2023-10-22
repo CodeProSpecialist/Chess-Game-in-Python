@@ -60,7 +60,7 @@ def play_chess():
         draw_chess_board(screen, board)
         pygame.display.flip()
 
-        if not board.turn:  # Computer's turn (black)
+        if not board.turn:    # Computer's turn (black)
             move = get_computer_move(board)
             board.push(move)
 
