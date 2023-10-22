@@ -12,6 +12,7 @@ class ChessGame:
         self.canvas.pack()
         self.load_images()
         self.draw_board()
+        self.selected_square = None
         self.canvas.bind("<Button-1>", self.on_square_click)
 
     def load_images(self):
@@ -32,7 +33,7 @@ class ChessGame:
         }
         for piece_symbol, piece_name in piece_mappings.items():
             img = Image.open(f"chess_pieces/{piece_name}.png")
-            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7))))
+            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7)))
             self.piece_images[piece_symbol] = img
 
     def draw_board(self):
@@ -49,9 +50,20 @@ class ChessGame:
         col = event.x // 50
         row = 7 - (event.y // 50)
         square = chess.square(col, row)
-        piece = self.board.piece_at(square)
-        if piece is not None:
-            print(f"Clicked on square {chess.SQUARE_NAMES[square]} containing {piece}.")
+
+        if self.selected_square is None:
+            piece = self.board.piece_at(square)
+            if piece is not None:
+                self.selected_square = square
+        else:
+            move = chess.Move(self.selected_square, square)
+            if move in self.board.legal_moves:
+                self.board.push(move)
+                self.selected_square = None
+                self.canvas.delete("piece")  # Clear the canvas
+                self.draw_board()
+            else:
+                self.selected_square = None
 
 if __name__ == "__main__":
     root = tk.Tk()
