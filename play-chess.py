@@ -76,7 +76,7 @@ class ChessGame:
                     else:
                         promotion_piece = chess.QUEEN  # Default to promoting to Queen
                         self.board.set_piece_at(square, promotion_piece)
-                    self.selected_square = None
+                        self.selected_square = None
                 else:
                     self.board.push(move)
 
