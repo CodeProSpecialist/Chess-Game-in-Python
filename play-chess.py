@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 import chess
 import chess.svg
@@ -76,6 +77,7 @@ class ChessGame:
 
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
+                time.sleep(2)
                 self.play_computer_move()  # Trigger the computer move
             self.selected_square = None
 
