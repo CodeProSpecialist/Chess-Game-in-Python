@@ -2,6 +2,7 @@ import tkinter as tk
 import chess
 import chess.svg
 from PIL import Image, ImageTk
+from tkinter import simpledialog, messagebox
 
 class ChessGame:
     def __init__(self, root):
@@ -46,19 +47,32 @@ class ChessGame:
                     img = self.piece_images[piece.symbol()]
                     self.canvas.create_image(col * 50 + 25, row * 50 + 25, image=img)
 
+    def promote_pawn(self):
+        options = ["Queen", "Rook", "Knight", "Bishop"]
+        response = simpledialog.askinteger("Promotion", "Choose a promotion (1: Queen, 2: Rook, 3: Knight, 4: Bishop)", parent=self.root, minvalue=1, maxvalue=4)
+        if response is not None:
+            promotion_piece = chess.Piece(chess.PieceType(response), self.board.turn)
+            self.board.set_piece_at(self.promotion_square, promotion_piece)
+
     def on_square_click(self, event):
         col = event.x // 50
         row = 7 - (event.y // 50)
         square = chess.square(col, row)
+        piece = self.board.piece_at(square)
 
         if self.selected_square is None:
-            piece = self.board.piece_at(square)
             if piece is not None:
                 self.selected_square = square
         else:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                self.board.push(move)
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
+                    # Pawn promotion logic
+                    self.promotion_square = square
+                    self.promote_pawn()
+                else:
+                    self.board.push(move)
+
                 self.selected_square = None
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
