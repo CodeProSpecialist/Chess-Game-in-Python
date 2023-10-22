@@ -1,16 +1,16 @@
 import chess
-import chess.variant
 
 def print_board(board):
     print(board)
 
 def print_menu():
     print("Chess Game Menu:")
-    print("1. Start New Game")
+    print("1. Start New Chess Game")
     print("2. Exit")
 
-def play_chess():
-    board = chess.variant.CrazyhouseBoard()  # You can choose a different variant if desired
+def start_chess():
+    board = chess.Board()
+    print("Starting a new standard chess game.")
     while not board.is_game_over():
         print_board(board)
         move = input("Enter your move (e.g., 'e2e4'): ")
@@ -27,7 +27,7 @@ def main():
         print_menu()
         choice = input("Enter your choice: ")
         if choice == '1':
-            play_chess()
+            start_chess()
         elif choice == '2':
             break
         else:
