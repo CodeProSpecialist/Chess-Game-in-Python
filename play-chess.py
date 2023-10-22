@@ -1,7 +1,7 @@
 import tkinter as tk
 import chess
 import chess.svg
-from PIL import ImageTk
+from PIL import Image, ImageTk
 
 class ChessGame:
     def __init__(self, root):
@@ -16,8 +16,13 @@ class ChessGame:
 
     def load_images(self):
         self.piece_images = {}
-        for piece in chess.PIECE_SYMBOLS:
-            img = ImageTk.PhotoImage(file=f"chess_pieces/{piece}.png")
+        piece_names = [
+            'black_bishop', 'black_king', 'black_knight', 'black_pawn', 'black_queen', 'black_rook',
+            'white_bishop', 'white_king', 'white_knight', 'white_pawn', 'white_queen', 'white_rook'
+        ]
+        for piece in piece_names:
+            img = Image.open(f"chess_pieces/{piece}.png")
+            img = ImageTk.PhotoImage(img)
             self.piece_images[piece] = img
 
     def draw_board(self):
