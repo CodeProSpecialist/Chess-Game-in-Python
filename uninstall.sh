@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of installed packages
-packages=("python-chess" "pygame")
+packages=("python-chess" "pygame" "pillow")
 
 # Function to uninstall packages
 uninstall_packages() {
