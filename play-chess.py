@@ -61,7 +61,8 @@ class ChessGame:
         else:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [
+                    0, 7]:
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
@@ -75,7 +76,9 @@ class ChessGame:
 
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
+                self.play_computer_move()  # Trigger the computer move
             self.selected_square = None
+
 
     def get_highest_ranked_captured_piece(self):
         for piece in reversed(self.captured_pieces):
