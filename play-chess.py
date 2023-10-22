@@ -2,6 +2,7 @@ import tkinter as tk
 import chess
 import chess.svg
 from PIL import Image, ImageTk
+import chess.engine
 
 class ChessGame:
     def __init__(self, root):
@@ -15,6 +16,7 @@ class ChessGame:
         self.draw_board()
         self.selected_square = None
         self.canvas.bind("<Button-1>", self.on_square_click)
+        root.after(1000, self.play_computer_move)  # Initial computer move
 
     def load_images(self):
         self.piece_images = {}
@@ -34,7 +36,7 @@ class ChessGame:
         }
         for piece_symbol, piece_name in piece_mappings.items():
             img = Image.open(f"chess_pieces/{piece_name}.png")
-            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7))))
+            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7)))
             self.piece_images[piece_symbol] = img
 
     def draw_board(self):
@@ -60,25 +62,35 @@ class ChessGame:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
                 if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
-                    # Check for promotion to the highest-ranking captured piece
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
+                        self.selected_square = None
+                    else:
+                        promotion_piece = chess.QUEEN  # Default to promoting to Queen
+                        self.board.set_piece_at(square, promotion_piece)
+                        self.selected_square = None
                 else:
                     self.board.push(move)
 
-                self.selected_square = None
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
-            else:
-                self.selected_square = None
+            self.selected_square = None
 
     def get_highest_ranked_captured_piece(self):
-        # Check for the highest-ranked captured piece (excluding pawns)
         for piece in reversed(self.captured_pieces):
             if piece.piece_type != chess.PAWN:
                 return piece
         return None
+
+    def play_computer_move(self):
+        if self.board.turn == chess.BLACK:
+            with chess.engine.SimpleEngine.popen_uci("/usr/games/stockfish") as engine:
+                result = engine.play(self.board, chess.engine.Limit(time=2))
+                self.board.push(result.move)
+                self.canvas.delete("piece")  # Clear the canvas
+                self.draw_board()
+                self.root.after(1000, self.play_computer_move)  # Schedule the next computer move
 
 if __name__ == "__main__":
     root = tk.Tk()
