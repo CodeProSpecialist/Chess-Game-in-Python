@@ -24,12 +24,7 @@ class ChessGame:
 
     def show_alert(self, message):
         messagebox.showinfo("Computer's Turn", message)
-        self.root.after(500, self.hide_alert)  # Auto-close the alert after 2000 milliseconds (2 seconds)
 
-
-    def hide_alert(self):
-        messagebox.showinfo("Your Turn", "It's your turn!")  # Display another message to indicate your turn
-        self.root.after(500, self.hide_alert)  # Auto-close the alert after 2000 milliseconds (2 seconds)
 
     def load_images(self):
         self.piece_images = {}
