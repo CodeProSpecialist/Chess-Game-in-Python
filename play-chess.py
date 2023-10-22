@@ -1,4 +1,3 @@
-import time
 import tkinter as tk
 import chess
 import chess.svg
@@ -16,8 +15,10 @@ class ChessGame:
         self.load_images()
         self.draw_board()
         self.selected_square = None
+        self.deselect_timer = None  # Timer for deselection
+        self.auto_move_timer = None  # Timer for the computer's move
         self.canvas.bind("<Button-1>", self.on_square_click)
-        root.after(1000, self.play_computer_move)  # Initial computer move
+        root.after(2000, self.play_computer_move)  # Initial computer move
 
     def load_images(self):
         self.piece_images = {}
@@ -37,7 +38,7 @@ class ChessGame:
         }
         for piece_symbol, piece_name in piece_mappings.items():
             img = Image.open(f"chess_pieces/{piece_name}.png")
-            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7)))) 
+            img = ImageTk.PhotoImage(img.resize((int(50 * 0.7), int(50 * 0.7))))
             self.piece_images[piece_symbol] = img
 
     def draw_board(self):
@@ -51,6 +52,9 @@ class ChessGame:
                     self.canvas.create_image(col * 50 + 25, row * 50 + 25, image=img, tags=piece.symbol())
 
     def on_square_click(self, event):
+        if self.deselect_timer:
+            return  # If a deselection timer is active, do nothing
+
         col = event.x // 50
         row = 7 - (event.y // 50)
         square = chess.square(col, row)
@@ -62,8 +66,7 @@ class ChessGame:
         else:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [
-                    0, 7]:
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
@@ -75,11 +78,15 @@ class ChessGame:
                 else:
                     self.board.push(move)
 
-                    self.canvas.delete("piece")  # Clear the canvas
-                    self.draw_board()
-                    self.play_computer_move()  # Trigger the computer move
-                    self.selected_square = None
+                self.canvas.delete("piece")  # Clear the canvas
+                self.draw_board()
+                self.play_computer_move()  # Trigger the computer move
+                self.deselect_timer = self.root.after(2000, self.deselect_squares)  # Set a deselection timer
 
+    def deselect_squares(self):
+        self.selected_square = None
+        self.root.after_cancel(self.deselect_timer)
+        self.deselect_timer = None
 
     def get_highest_ranked_captured_piece(self):
         for piece in reversed(self.captured_pieces):
@@ -94,7 +101,7 @@ class ChessGame:
                 self.board.push(result.move)
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
-                self.root.after(1000, self.play_computer_move)  # Schedule the next computer move
+                self.auto_move_timer = self.root.after(2000, self.play_computer_move)  # Schedule the next computer move
 
 if __name__ == "__main__":
     root = tk.Tk()
