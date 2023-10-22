@@ -15,7 +15,8 @@ if command -v pip3 &> /dev/null; then
         # Install Stockfish using apt-get
         echo "Installing Stockfish using apt-get..."
         sudo apt-get update
-        sudo apt-get install stockfish
+        sudo apt-get install stockfish libnotify-bin
+
 
         # Check the exit status of the apt-get command
         if [ $? -eq 0 ]; then
