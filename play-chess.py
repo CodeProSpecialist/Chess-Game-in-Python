@@ -23,6 +23,7 @@ piece_image_filenames = {
     'P': 'white_pawn.png',
 }
 
+
 def load_piece_images():
     piece_images = {}
     for piece, filename in piece_image_filenames.items():
@@ -30,6 +31,7 @@ def load_piece_images():
         img = pygame.transform.scale(img, (int(SQUARE_SIZE * PIECE_SCALE), int(SQUARE_SIZE * PIECE_SCALE)))
         piece_images[piece] = img
     return piece_images
+
 
 def draw_chess_board(screen, board, piece_images):
     for row in range(8):
@@ -40,9 +42,11 @@ def draw_chess_board(screen, board, piece_images):
             if piece:
                 screen.blit(piece_images[piece.symbol()], (col * SQUARE_SIZE, (7 - row) * SQUARE_SIZE))
 
+
 def get_computer_move(board):
     legal_moves = list(board.legal_moves)
     return random.choice(legal_moves)
+
 
 def play_chess():
     pygame.init()
@@ -52,11 +56,24 @@ def play_chess():
     board = chess.Board()
     piece_images = load_piece_images()
 
+    selected_square = None  # Store the selected square
+
     while not board.is_game_over():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                col = event.pos[0] // SQUARE_SIZE
+                row = 7 - event.pos[1] // SQUARE_SIZE
+                square = chess.square(col, row)
+                if selected_square is None:
+                    selected_square = square
+                else:
+                    move = chess.Move(selected_square, square)
+                    if move in board.legal_moves:
+                        board.push(move)
+                    selected_square = None
 
         draw_chess_board(screen, board, piece_images)
         pygame.display.flip()
@@ -66,6 +83,7 @@ def play_chess():
             board.push(move)
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     print("Welcome to Python Chess!")
