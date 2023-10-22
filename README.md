@@ -1,6 +1,8 @@
 # Chess-Game-in-Python
 Chess game in Python
 
+This was tested to work on Debian GNU/Linux 12 (bookworm). 
+
 To install:
 
 chmod +x install.sh
