@@ -75,11 +75,10 @@ class ChessGame:
                 else:
                     self.board.push(move)
 
-                self.canvas.delete("piece")  # Clear the canvas
-                self.draw_board()
-                time.sleep(2)
-                self.play_computer_move()  # Trigger the computer move
-            self.selected_square = None
+                    self.canvas.delete("piece")  # Clear the canvas
+                    self.draw_board()
+                    self.play_computer_move()  # Trigger the computer move
+                    self.selected_square = None
 
 
     def get_highest_ranked_captured_piece(self):
