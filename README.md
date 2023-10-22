@@ -3,7 +3,9 @@ Chess game in Python
 
 To install:
 
-sh install.sh
+chmod +x install.sh
+
+./install.sh
 
 To play a chess game, open a comand line terminal and type the following command:
 
@@ -13,4 +15,6 @@ python3 play-chess.py
 ---------------------------------------------------------------------------
 To uninstall:
 
-sh uninstall.sh 
+chmod +x uninstall.sh
+
+./uninstall.sh 
