@@ -31,7 +31,7 @@ def load_piece_images():
         piece_images[piece] = img
     return piece_images
 
-def draw_chess_board(screen, board):
+def draw_chess_board(screen, board, piece_images):
     for row in range(8):
         for col in range(8):
             square_color = (255, 206, 158) if (row + col) % 2 == 0 else (209, 139, 71)
@@ -50,6 +50,7 @@ def play_chess():
     pygame.display.set_caption("Chess Game")
 
     board = chess.Board()
+    piece_images = load_piece_images()
 
     while not board.is_game_over():
         for event in pygame.event.get():
@@ -57,10 +58,10 @@ def play_chess():
                 pygame.quit()
                 return
 
-        draw_chess_board(screen, board)
+        draw_chess_board(screen, board, piece_images)
         pygame.display.flip()
 
-        if not board.turn:    # Computer's turn (black)
+        if not board.turn:  # Computer's turn (black)
             move = get_computer_move(board)
             board.push(move)
 
