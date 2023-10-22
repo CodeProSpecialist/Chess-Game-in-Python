@@ -112,6 +112,7 @@ class ChessGame:
     def play_computer_move(self):
         # Show the alert message
         self.show_alert("Computer is thinking...")
+        self.root.after(500, self.hide_alert)  # Auto-close the alert after 2000 milliseconds (2 seconds)
 
         if self.board.turn == chess.BLACK:
             with chess.engine.SimpleEngine.popen_uci("/usr/games/stockfish") as engine:
