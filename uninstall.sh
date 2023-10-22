@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of installed packages
-packages=("python-chess" "python-chess-variant")
+packages=("python-chess")
 
 # Function to uninstall packages
 uninstall_packages() {
