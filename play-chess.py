@@ -85,7 +85,7 @@ class ChessGame:
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
                 self.play_computer_move()  # Trigger the computer move
-                self.deselect_timer = self.root.after(2000, self.deselect_squares)  # Set a deselection timer
+                self.deselect_timer = self.root.after(25, self.deselect_squares)  # Set a deselection timer
 
     def deselect_squares(self):
         self.selected_square = None
