@@ -6,7 +6,7 @@ if command -v pip3 &> /dev/null; then
 
     # Install required libraries using pip3
     echo "Installing required libraries using pip3..."
-    pip3 install python-chess pygame
+    pip3 install python-chess pygame pillow
 
     # Check the exit status of the pip3 command
     if [ $? -eq 0 ]; then
