@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import chess
 import chess.svg
 from PIL import Image, ImageTk
@@ -19,6 +20,16 @@ class ChessGame:
         self.auto_move_timer = None  # Timer for the computer's move
         self.canvas.bind("<Button-1>", self.on_square_click)
         root.after(2000, self.play_computer_move)  # Initial computer move
+
+
+    def show_alert(self, message):
+        messagebox.showinfo("Computer's Turn", message)
+        self.root.after(2000, self.hide_alert)  # Auto-close the alert after 2000 milliseconds (2 seconds)
+
+
+    def hide_alert(self):
+        messagebox.showinfo("Your Turn", "It's your turn!")  # Display another message to indicate your turn
+
 
     def load_images(self):
         self.piece_images = {}
@@ -97,7 +108,11 @@ class ChessGame:
                 return piece
         return None
 
+
     def play_computer_move(self):
+        # Show the alert message
+        self.show_alert("Computer is thinking...")
+
         if self.board.turn == chess.BLACK:
             with chess.engine.SimpleEngine.popen_uci("/usr/games/stockfish") as engine:
                 result = engine.play(self.board, chess.engine.Limit(time=2))
@@ -105,6 +120,7 @@ class ChessGame:
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
                 self.auto_move_timer = self.root.after(2000, self.play_computer_move)  # Schedule the next computer move
+
 
 if __name__ == "__main__":
     root = tk.Tk()
