@@ -49,9 +49,10 @@ class ChessGame:
 
     def promote_pawn(self):
         options = ["Queen", "Rook", "Knight", "Bishop"]
-        response = simpledialog.askinteger("Promotion", "Choose a promotion (1: Queen, 2: Rook, 3: Knight, 4: Bishop)", parent=self.root, minvalue=1, maxvalue=4)
-        if response is not None:
-            promotion_piece = chess.Piece(chess.PieceType(response), self.board.turn)
+        response = simpledialog.askstring("Promotion", "Choose a promotion (Queen, Rook, Knight, Bishop):", parent=self.root)
+        if response in options:
+            piece_mapping = {"Queen": "q", "Rook": "r", "Knight": "n", "Bishop": "b"}
+            promotion_piece = chess.Piece.from_symbol(piece_mapping[response])
             self.board.set_piece_at(self.promotion_square, promotion_piece)
 
     def on_square_click(self, event):
