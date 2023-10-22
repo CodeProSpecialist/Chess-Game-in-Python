@@ -16,9 +16,9 @@ uninstall_packages() {
     done
 }
 
-echo "uninstalling Linux packages....."
+echo "uninstalling stockfish ....."
 
-sudo apt-get uninstall stockfish libnotify-bin ;
+sudo apt-get uninstall stockfish ;
 
 # Check if pip3 is installed
 if command -v pip3 &> /dev/null; then
