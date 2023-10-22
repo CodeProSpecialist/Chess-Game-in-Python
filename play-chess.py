@@ -3,9 +3,9 @@ import chess
 import random
 
 # Define the dimensions of the chessboard and the scale factor for chess pieces
-CHESSBOARD_SIZE = 800  # Adjust to your preferred size
+CHESSBOARD_SIZE = 550  # Adjust to your preferred size
 SQUARE_SIZE = CHESSBOARD_SIZE // 8
-PIECE_SCALE = 0.25  # Adjust to your preferred scale (0.25 means 25% of original size)
+PIECE_SCALE = 0.5  # Adjust to your preferred scale (0.5 means 50% of original size)
 
 # Define a dictionary to map piece notation to image filenames
 piece_image_filenames = {
