@@ -69,23 +69,22 @@ class ChessGame:
         elif self.selected_square is not None:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [
-                    0, 7]:
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
-                        self.selected_square = None
                     else:
                         promotion_piece = chess.QUEEN  # Default to promoting to Queen
                         self.board.set_piece_at(square, promotion_piece)
-                        self.selected_square = None
+                    self.selected_square = None
                 else:
                     self.board.push(move)
 
                 self.canvas.delete("piece")  # Clear the canvas
                 self.draw_board()
                 self.play_computer_move()  # Trigger the computer move
-                self.deselect_timer = self.root.after(25, self.deselect_squares)  # Set a deselection timer
+                self.deselect_timer = self.root.after(8000, self.deselect_squares)  # Set an 8-second deselection timer
+                self.selected_square = None  # Deselect the square
 
     def deselect_squares(self):
         self.selected_square = None
