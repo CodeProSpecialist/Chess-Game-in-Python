@@ -8,6 +8,7 @@ class ChessGame:
         self.root = root
         self.root.title("Chess Game")
         self.board = chess.Board()
+        self.captured_pieces = []  # List to store captured pieces
         self.canvas = tk.Canvas(root, width=400, height=400)
         self.canvas.pack()
         self.load_images()
@@ -44,11 +45,7 @@ class ChessGame:
                 piece = self.board.piece_at(chess.square(col, 7 - row))
                 if piece is not None:
                     img = self.piece_images[piece.symbol()]
-                    self.canvas.create_image(col * 50 + 25, row * 50 + 25, image=img)
-
-    def promote_pawn(self, square):
-        promotion_piece = chess.Piece(chess.QUEEN, self.board.turn)
-        self.board.set_piece_at(square, promotion_piece)
+                    self.canvas.create_image(col * 50 + 25, row * 50 + 25, image=img, tags=piece.symbol())
 
     def on_square_click(self, event):
         col = event.x // 50
@@ -63,8 +60,10 @@ class ChessGame:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
                 if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
-                    # Automatically promote the pawn to Queen
-                    self.promote_pawn(square)
+                    # Check for promotion to the highest-ranking captured piece
+                    promotion_piece = self.get_highest_ranked_captured_piece()
+                    if promotion_piece:
+                        self.board.set_piece_at(square, promotion_piece)
                 else:
                     self.board.push(move)
 
@@ -73,6 +72,13 @@ class ChessGame:
                 self.draw_board()
             else:
                 self.selected_square = None
+
+    def get_highest_ranked_captured_piece(self):
+        # Check for the highest-ranked captured piece (excluding pawns)
+        for piece in reversed(self.captured_pieces):
+            if piece.piece_type != chess.PAWN:
+                return piece
+        return None
 
 if __name__ == "__main__":
     root = tk.Tk()
