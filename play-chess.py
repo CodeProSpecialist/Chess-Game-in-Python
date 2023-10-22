@@ -4,6 +4,7 @@ import chess
 import chess.svg
 from PIL import Image, ImageTk
 import chess.engine
+import subprocess
 
 class ChessGame:
     def __init__(self, root):
@@ -21,10 +22,13 @@ class ChessGame:
         self.canvas.bind("<Button-1>", self.on_square_click)
         root.after(2000, self.play_computer_move)  # Initial computer move
 
-
     def show_alert(self, message):
-        messagebox.showinfo("Computer's Turn", message)
+        # Use the notify-send command to display a notification
+        subprocess.run(["notify-send", "Computer's Turn", message])
 
+    def hide_alert(self):
+        # Use the notify-send command to display a notification
+        subprocess.run(["notify-send", "Your Turn", "It's your turn!"])
 
     def load_images(self):
         self.piece_images = {}
@@ -75,7 +79,8 @@ class ChessGame:
         elif self.selected_square is not None:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [
+                    0, 7]:
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
@@ -102,7 +107,6 @@ class ChessGame:
             if piece.piece_type != chess.PAWN:
                 return piece
         return None
-
 
     def play_computer_move(self):
         # Show the alert message
