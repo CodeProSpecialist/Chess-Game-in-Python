@@ -7,13 +7,29 @@ CHESSBOARD_SIZE = 800  # Adjust to your preferred size
 SQUARE_SIZE = CHESSBOARD_SIZE // 8
 PIECE_SCALE = 0.25  # Adjust to your preferred scale (0.25 means 25% of original size)
 
-# Load piece images
-piece_images = {}
-for piece in chess.PIECE_SYMBOLS:
-    for color in ['w', 'b']:
-        img = pygame.image.load(f'chess_pieces/{color}{piece}.png')
+# Define a dictionary to map piece notation to image filenames
+piece_image_filenames = {
+    'r': 'black_rook.png',
+    'n': 'black_knight.png',
+    'b': 'black_bishop.png',
+    'q': 'black_queen.png',
+    'k': 'black_king.png',
+    'p': 'black_pawn.png',
+    'R': 'white_rook.png',
+    'N': 'white_knight.png',
+    'B': 'white_bishop.png',
+    'Q': 'white_queen.png',
+    'K': 'white_king.png',
+    'P': 'white_pawn.png',
+}
+
+def load_piece_images():
+    piece_images = {}
+    for piece, filename in piece_image_filenames.items():
+        img = pygame.image.load(f'chess_pieces/{filename}')
         img = pygame.transform.scale(img, (int(SQUARE_SIZE * PIECE_SCALE), int(SQUARE_SIZE * PIECE_SCALE)))
-        piece_images[chess.BaseBoard.piece_symbol(piece, color)] = img
+        piece_images[piece] = img
+    return piece_images
 
 def draw_chess_board(screen, board):
     for row in range(8):
