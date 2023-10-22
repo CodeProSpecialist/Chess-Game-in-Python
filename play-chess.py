@@ -57,6 +57,7 @@ def play_chess():
     piece_images = load_piece_images()
 
     selected_square = None  # Store the selected square
+    move_started = False
 
     while not board.is_game_over():
         for event in pygame.event.get():
@@ -67,13 +68,18 @@ def play_chess():
                 col = event.pos[0] // SQUARE_SIZE
                 row = 7 - event.pos[1] // SQUARE_SIZE
                 square = chess.square(col, row)
-                if selected_square is None:
+                piece = board.piece_at(square)
+
+                if not move_started and piece and piece.color == board.turn:
                     selected_square = square
-                else:
+                    move_started = True
+                elif move_started and square != selected_square:
                     move = chess.Move(selected_square, square)
                     if move in board.legal_moves:
                         board.push(move)
-                    selected_square = None
+                    move_started = False
+                else:
+                    move_started = False
 
         draw_chess_board(screen, board, piece_images)
         pygame.display.flip()
