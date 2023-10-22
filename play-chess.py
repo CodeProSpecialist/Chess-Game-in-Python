@@ -60,13 +60,17 @@ class ChessGame:
         square = chess.square(col, row)
         piece = self.board.piece_at(square)
 
-        if self.selected_square is None:
-            if piece is not None:
+        if self.board.turn == chess.WHITE and piece is not None and piece.color == chess.WHITE:
+            if self.selected_square is None:
                 self.selected_square = square
-        else:
+        elif self.board.turn == chess.BLACK and piece is not None and piece.color == chess.BLACK:
+            if self.selected_square is None:
+                self.selected_square = square
+        elif self.selected_square is not None:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
-                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [0, 7]:
+                if self.board.piece_at(self.selected_square).piece_type == chess.PAWN and chess.square_rank(square) in [
+                    0, 7]:
                     promotion_piece = self.get_highest_ranked_captured_piece()
                     if promotion_piece:
                         self.board.set_piece_at(square, promotion_piece)
